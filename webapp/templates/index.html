@@ -1,0 +1,118 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>TRAFFIC MANAGEMENT SYSTEM USING YOLO</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <style>
+    .upload-grid { 
+        display:grid; 
+        grid-template-columns: repeat(2, 1fr); 
+        gap:16px; 
+    }
+    .file-card { 
+        background:#fff; 
+        padding:14px; 
+        border-radius:10px; 
+        border:1px solid #e5e7eb; 
+        text-align:center; 
+    }
+    .preview {
+        width:100%; 
+        height:180px; 
+        object-fit:cover; 
+        border-radius:8px; 
+        background:#f3f4f6; 
+        display:block;
+    }
+    .file-name { 
+        font-size:14px; 
+        color:#374151; 
+        margin-top:6px; 
+        min-height:20px;
+        word-break:break-all;
+    }
+    .file-card strong { font-size:16px; display:block; margin-bottom:6px; }
+    .upload-action { margin-top:20px; }
+  </style>
+</head>
+
+<body>
+  <div class="page" style="max-width:900px; margin:28px auto;">
+    <header>
+      <h1>TRAFFIC MANAGEMENT SYSTEM USING YOLO</h1>
+    </header>
+
+    <main>
+      <form action="{{ url_for('upload_and_detect') }}" method="post" enctype="multipart/form-data">
+
+        <div class="upload-grid">
+
+          <!-- Lane 1 -->
+          <div class="file-card">
+            <strong>Lane 1</strong>
+            <img id="p1" class="preview" alt="">
+            <div id="n1" class="file-name"></div>
+            <input id="lane1" type="file" name="lane1" accept="image/*">
+          </div>
+
+          <!-- Lane 2 -->
+          <div class="file-card">
+            <strong>Lane 2</strong>
+            <img id="p2" class="preview" alt="">
+            <div id="n2" class="file-name"></div>
+            <input id="lane2" type="file" name="lane2" accept="image/*">
+          </div>
+
+          <!-- Lane 3 -->
+          <div class="file-card">
+            <strong>Lane 3</strong>
+            <img id="p3" class="preview" alt="">
+            <div id="n3" class="file-name"></div>
+            <input id="lane3" type="file" name="lane3" accept="image/*">
+          </div>
+
+          <!-- Lane 4 -->
+          <div class="file-card">
+            <strong>Lane 4</strong>
+            <img id="p4" class="preview" alt="">
+            <div id="n4" class="file-name"></div>
+            <input id="lane4" type="file" name="lane4" accept="image/*">
+          </div>
+
+        </div>
+
+        <div class="upload-action">
+          <button type="submit">Detect & Show Summary</button>
+        </div>
+
+      </form>
+    </main>
+  </div>
+
+<script>
+  function preview(inputId, imgId, nameId) {
+    const input = document.getElementById(inputId);
+    const img = document.getElementById(imgId);
+    const nameBox = document.getElementById(nameId);
+
+    input.addEventListener('change', () => {
+      const file = input.files?.[0];
+      if (!file) {
+        img.src = "";
+        nameBox.textContent = "";
+        return;
+      }
+      nameBox.textContent = file.name;
+      img.src = URL.createObjectURL(file);
+    });
+  }
+
+  preview("lane1","p1","n1");
+  preview("lane2","p2","n2");
+  preview("lane3","p3","n3");
+  preview("lane4","p4","n4");
+</script>
+
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Traffic Detection — Result</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>Traffic Detection — Summary</h1>
+      <p class="subtitle">Detected lanes: <strong>{{ summaries|length }}</strong> — densest: <strong>Lane {{ densest_lane if densest_lane else 'N/A' }}</strong></p>
+    </header>
+
+    <main>
+      <section class="lane-grid">
+        {% for i in range(4) %}
+          {% set s = summaries[i] if i < summaries|length else {'file': None, 'vehicle_count': 0, 'counts': {}} %}
+          <article class="lane-card">
+            <div class="lane-card-header">
+              <h3>Lane {{ i+1 }}</h3>
+              <div class="vehicle-count">{{ s.vehicle_count }}</div>
+            </div>
+            <div class="lane-image">
+              {% if s.file %}
+                <img src="{{ url_for('static', filename='uploads/' ~ s.file) }}" alt="lane {{ i+1 }}">
+              {% else %}
+                <div class="placeholder">No image</div>
+              {% endif %}
+            </div>
+            <div class="breakdown">
+              <h4>Vehicle breakdown</h4>
+              {% if s.counts %}
+                <ul>
+                  {% for k, v in s.counts.items() %}
+                    <li><span class="badge">{{ v }}</span> {{ k }}</li>
+                  {% endfor %}
+                </ul>
+              {% else %}
+                <div class="muted">No vehicles detected</div>
+              {% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </section>
+
+      <section class="dynamic-panel">
+        <h2>Dynamic Signal Output</h2>
+
+        {% if dynamic.active %}
+        <div class="dynamic-card">
+          <div class="dynamic-header">
+            <div>
+              <strong>{{ dynamic.open_message }}</strong>
+              <p class="muted">Lane with densest traffic: Lane {{ dynamic.open_lane }}</p>
+            </div>
+            <div class="timer" id="countdown">{{ dynamic.duration }}</div>
+          </div>
+
+          <div class="signal-visual">
+            <div class="signal-rows">
+              <pre id="visual1" class="visual-row"></pre>
+              <pre id="visual2" class="visual-row"></pre>
+              <pre id="visual3" class="visual-row"></pre>
+            </div>
+          </div>
+
+          <div class="dynamic-steps">
+            {% for step in dynamic.steps %}
+            <div class="step-card">
+              <h4>{{ step.title }}</h4>
+              <p>{{ step.desc }}</p>
+              <pre class="visual-small">{{ step.visual.row1|join('   ') }}
+{{ step.visual.row2|join('   ') }}
+{{ step.visual.row3|join('   ') }}</pre>
+            </div>
+            {% endfor %}
+          </div>
+
+          
+
+        {% else %}
+          <div class="dynamic-card muted">No dynamic signal data (no vehicles detected).</div>
+        {% endif %}
+      </section>
+
+      <p class="back-link"><a href="{{ url_for('index') }}">◀ Back</a></p>
+    </main>
+  </div>
+
+  <script>
+    const dynamic = {{ dynamic|tojson }};
+  </script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
