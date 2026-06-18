@@ -10,6 +10,16 @@ The system processes traffic images, counts vehicles across multiple lanes, and 
 
 ---
 
+## Preview
+
+
+
+https://github.com/user-attachments/assets/368a1f0e-ee75-443a-a025-100d55203302
+
+
+---
+
+
 ## ✨ Features
 
 - Vehicle detection using YOLOv3
